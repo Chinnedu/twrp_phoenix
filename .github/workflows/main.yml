@@ -16,7 +16,7 @@ on:
     types: [started]
 
 env:
- MANIFEST=https://github.com/PitchBlackRecoveryProject/manifest_pb -b android-12.1
+  MANIFEST=https://github.com/PitchBlackRecoveryProject/manifest_pb -b android-12.1
   DEVICE: fog
   DT_LINK: https://github.com/boedhack99/device_xiaomi_fog-TWRP -b twrp-12.1
   DT_PATH: device/xiaomi/fog
@@ -26,12 +26,12 @@ env:
   CHAT_ID: ${{ secrets.TEST_CHAT_ID }}
   BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
   TARGET: bootimage
-  ZIP_NAME: PBRP_A12.1.zip
+  ZIP_NAME: TWRP_PHOENIX_A12.1.zip
   TZ: Asia/Kolkata
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-18.04
 
     steps:
        - name: Checkout
@@ -73,11 +73,11 @@ jobs:
               rm -rf .repo/
               mka $TARGET
              
-       - name: Uploading boot image
+       - name: Uploading recovery image
          run: |
               cd work/out/target/product/$DEVICE
-              sudo zip -r9 $ZIP_NAME boot.img
+              sudo zip -r9 $ZIP_NAME recovery.img
               curl -F chat_id=$CHAT_ID -F document=@$ZIP_NAME https://api.telegram.org/bot$BOT_TOKEN/sendDocument -F caption="Please test it @hraj9258"
               curl -sL https://git.io/file-transfer | sh
               ./transfer wet $ZIP_NAME
-              ./transfer wet boot.img
+              ./transfer wet recovery.img
